@@ -1,0 +1,15 @@
+server:
+  port: 7073
+spring:
+  application:
+    name: JRTP701-ElgibilityDeterminationService
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost:3306/jrtp701-ish-db
+    username: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
