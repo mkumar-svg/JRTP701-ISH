@@ -5,8 +5,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql:///jrtp701-ish-db
-    username: root
-    password: root
+    username: xxxx
+    password: xxxx
     
 # jpa hibernate property
   jpa:
