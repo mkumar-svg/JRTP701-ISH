@@ -1,6 +1,6 @@
 package com.nit.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,8 +25,8 @@ public class ElgibilityDetailsEntity {
 	private String planName;
 	@Column(length = 30)
 	private String planStatus;
-	private LocalDateTime planStartDate;
-	private LocalDateTime planEndDate;
+	private LocalDate planStartDate;
+	private LocalDate planEndDate;
 	private Double benifitAmt;
 	@Column(length = 60)
 	private String denialReason;

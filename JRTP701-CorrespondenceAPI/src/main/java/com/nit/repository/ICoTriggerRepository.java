@@ -8,4 +8,5 @@ import com.nit.entity.CoTriggersEntity;
 
 public interface ICoTriggerRepository extends JpaRepository<CoTriggersEntity, Integer> {
 	public List<CoTriggersEntity> findByTriggerStatus(String status);
+	public CoTriggersEntity findByCaseNo(int caseNo);
 }

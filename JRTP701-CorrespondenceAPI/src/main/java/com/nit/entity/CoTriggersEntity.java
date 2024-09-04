@@ -18,6 +18,7 @@ public class CoTriggersEntity {
 	private Integer triggerId;
 	private Integer caseNo;
 	@Lob
+	@Column(length = 100000)
 	private byte[] coNoticePdf;
 	@Column(length = 30)
 	private String triggerStatus="pending";

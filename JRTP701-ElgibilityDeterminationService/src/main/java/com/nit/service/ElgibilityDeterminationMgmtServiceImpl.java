@@ -79,12 +79,14 @@ public class ElgibilityDeterminationMgmtServiceImpl implements IElgibilityDeterm
 		
 		int citizenAge = 0;
 		String citizenName = null;
+		long citizenSSN = 0;
 		if(optCitizenEntity.isPresent()) {
 			CitizenAppRegistrationEntity citizenEntity = optCitizenEntity.get();
 			LocalDate citizenDOB = citizenEntity.getDob();
 			citizenName = citizenEntity.getFullName();
 			LocalDate sysDate = LocalDate.now();
 			citizenAge = Period.between(citizenDOB, sysDate).getYears();
+			citizenSSN = citizenEntity.getSsn();
 		}
 		
 		// call helper method to plan conditions
@@ -95,6 +97,8 @@ public class ElgibilityDeterminationMgmtServiceImpl implements IElgibilityDeterm
 		// save Elgibility entity object
 		ElgibilityDetailsEntity elgiEntity = new ElgibilityDetailsEntity();
 		BeanUtils.copyProperties(elgiOutput, elgiEntity);
+		elgiEntity.setCaseNo(caseNo);
+		elgiEntity.setHolderSSN(citizenSSN);
 		elgiRepo.save(elgiEntity);
 		
 		// save CoTriggers object

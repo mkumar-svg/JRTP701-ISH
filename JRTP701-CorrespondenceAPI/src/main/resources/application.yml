@@ -5,8 +5,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql:///jrtp701-ish-db
-    username: xxxx
-    password: xxxx
+    username: root
+    password: root
     
 # jpa hibernate property
   jpa:
@@ -17,8 +17,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: mxxxxxxxxxxxxxxxxxx@gmail.com
-    password: MXXXXXXXXXXXX
+    username: mk684010@gmail.com
+    password: ewjd msng zavl nmqt
     properties:
       mail:
         transport:
@@ -29,3 +29,5 @@ spring:
           starttls:
             enable: true
             required: true
+server:
+  port: 7075
