@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,9 @@ public class CorrespondenceMgmtServiceImpl implements ICorrespondenceMgmtService
 	
 	@Autowired
 	private EmailUtils mailUtil;
+	
+	int pendingTriggers = 0;	
+	int successTriggers = 0;
 
 	@Override
 	public COSummary processPendingTriggers() {
@@ -55,53 +61,60 @@ public class CorrespondenceMgmtServiceImpl implements ICorrespondenceMgmtService
 		
 		ElgibilityDetailsEntity eligiEntity = null;
 		
-		int pendingTriggers = 0;
-		
-		int successTriggers = 0;
-		
 		// get all pending triggers
 		List<CoTriggersEntity> triggersList = triggerRepo.findByTriggerStatus("pending");
-		
-		// process each pending triggers
-		for(CoTriggersEntity triggerEntity : triggersList) {
-			// get Eligibility details based on caseno
-			eligiEntity = elgiRepo.findByCaseNo(triggerEntity.getCaseNo());
-			
-			// get appId based on caseno
-			Optional<DcCaseEntity> optCaseEntity = caseRepo.findById(triggerEntity.getCaseNo());
-			if(optCaseEntity.isPresent()) {
-				DcCaseEntity caseEntity = optCaseEntity.get();
-				Integer appId = caseEntity.getAppId();
-				
-				// get the citizen details based on the appId
-				Optional<CitizenAppRegistrationEntity> optCitizenEntity = citizenRepo.findById(appId);
-				if(optCitizenEntity.isPresent()) {
-					citizenEntity = optCitizenEntity.get();
-				}
-			}
-			// generate pdf doc having eligibility details and send that pdf doc as email
-			
-			try
-			{
-				generatrPdfAndSendMail(eligiEntity, citizenEntity);
-				successTriggers++;
-			} catch(Exception e) {
-				pendingTriggers++;
-				e.printStackTrace();
-			}
-			
-			
-			// store pdf doc in CO_TRIGGERS db table and also update Trigger status to "completed"
-		}
 		
 		// prepare COSummary Report
 		COSummary summary = new COSummary();
 		summary.setTotalTriggers(triggersList.size());
+		
+		// Process the triggers in multithreaded env... using Executor Framework
+		ExecutorService executorService = Executors.newFixedThreadPool(10);
+		ExecutorCompletionService<Object> pool = new ExecutorCompletionService<>(executorService);
+		
+		// process each pending triggers
+		for(CoTriggersEntity triggerEntity : triggersList) {
+			pool.submit(() -> {
+
+					try {
+						processTrigger(summary, triggerEntity);
+						successTriggers++;
+					} catch(Exception e) {
+						e.printStackTrace();
+						pendingTriggers++;
+					}
+					return null;
+				
+			});			
+		}
+		
 		summary.setPendingTriggers(pendingTriggers);
 		summary.setSuccessTriggers(successTriggers);
 			
 			
 		return summary;
+	}
+	
+	private CitizenAppRegistrationEntity processTrigger(COSummary summary, CoTriggersEntity triggerEntity) throws Exception {
+		CitizenAppRegistrationEntity citizenEntity = null;
+		// get Eligibility details based on caseno
+					ElgibilityDetailsEntity eligiEntity = elgiRepo.findByCaseNo(triggerEntity.getCaseNo());
+					
+					// get appId based on caseno
+					Optional<DcCaseEntity> optCaseEntity = caseRepo.findById(triggerEntity.getCaseNo());
+					if(optCaseEntity.isPresent()) {
+						DcCaseEntity caseEntity = optCaseEntity.get();
+						Integer appId = caseEntity.getAppId();
+						
+						// get the citizen details based on the appId
+						Optional<CitizenAppRegistrationEntity> optCitizenEntity = citizenRepo.findById(appId);
+						if(optCitizenEntity.isPresent()) {
+							citizenEntity = optCitizenEntity.get();
+						}
+					}
+					// generate pdf doc having eligibility details and send that pdf doc as email
+					generatrPdfAndSendMail(eligiEntity, citizenEntity);
+					return citizenEntity;
 	}
 	
 	// helper method to generate the pdf doc
