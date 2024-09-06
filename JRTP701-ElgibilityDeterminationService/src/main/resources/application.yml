@@ -1,5 +1,5 @@
 server:
-  port: 7074
+  port: 
 spring:
   application:
     name: JRTP701-ElgibilityDeterminationService
