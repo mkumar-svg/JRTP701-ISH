@@ -30,4 +30,6 @@ public class ElgibilityDetailsEntity {
 	private Double benifitAmt;
 	@Column(length = 60)
 	private String denialReason;
+	private String bankName;
+	private Long accountNumber;
 }
