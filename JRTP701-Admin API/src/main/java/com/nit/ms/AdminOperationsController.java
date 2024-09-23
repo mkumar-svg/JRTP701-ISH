@@ -74,5 +74,13 @@ public class AdminOperationsController {
 			String msg = planService.changePlanStatus(planId, status);
 			return new ResponseEntity<String>(msg, HttpStatus.OK);
 	}
+	
+//	@ExceptionHandler(IllegalArgumentException.class)
+//	public ResponseEntity<ExceptionInfo> handleAE(IllegalArgumentException iae) {
+//		ExceptionInfo info = new ExceptionInfo();
+//		info.setMessage(iae.getMessage());
+//		info.setCode(3000);
+//		return new ResponseEntity<ExceptionInfo>(info, HttpStatus.INTERNAL_SERVER_ERROR);
+//	}
 
 }

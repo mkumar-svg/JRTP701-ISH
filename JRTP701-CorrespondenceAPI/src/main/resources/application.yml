@@ -1,19 +1,18 @@
 spring:
+  config:
+    import: optional:configserver:http://localhost:8888
   application:
     name: JRTP701-CorrespondenceAPI
-# for data source 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///jrtp701-ish-db
-    username: root
-    password: root
-    
-# jpa hibernate property
-  jpa:
-    show-sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: update
+#  datasource:
+#   driver-class-name: com.mysql.cj.jdbc.Driver
+#    password: root
+#    url: jdbc:mysql:///jrtp701-ish-db
+#    username: root
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
 eureka:
   client:
     service-url:
@@ -23,7 +22,7 @@ eureka:
     host: smtp.gmail.com
     port: 587
     username: manishkumarhn7114@gmail.com
-    password: manishxxxxx
+    password: jnzg orrv ftmh nkwm
     properties:
       mail:
         transport:

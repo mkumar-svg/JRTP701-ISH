@@ -9,13 +9,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class PlanControllerAdvice {
 	
 	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<String> handleIAE(IllegalArgumentException iae) {
-		return new ResponseEntity<String>(iae.getMessage(), HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ExceptionInfo> handleAE(IllegalArgumentException iae) {
+		ExceptionInfo info = new ExceptionInfo();
+		info.setMessage(iae.getMessage());
+		info.setCode(3000);
+		return new ResponseEntity<ExceptionInfo>(info, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<String> handleAllException(Exception exception) {
-		return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ExceptionInfo> handleAllException(Exception exception) {
+		ExceptionInfo info = new ExceptionInfo();
+		info.setMessage(exception.getMessage());
+		info.setCode(5000);
+		return new ResponseEntity(info, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

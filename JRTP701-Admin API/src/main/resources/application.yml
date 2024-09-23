@@ -1,22 +1,43 @@
 server:
   port: 7074
 spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:9999
+      
+  config:
+    import: optional:configserver:http://localhost:8888
   application:
     name: JRTP701-AdminService
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    password: root
-    url: jdbc:mysql:///jrtp701-ish-db
-    username: root
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+#  datasource:
+#   driver-class-name: com.mysql.cj.jdbc.Driver
+#    password: root
+#    url: jdbc:mysql:///jrtp701-ish-db
+#    username: root
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
 eureka:
   client:
     service-url:
-      defrault-zone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka
+      
+# activate all the actuators
+management:
+  endpoint:
+    env:
+      enabled: true
+      show-values: ALWAYS
+  health:
+    show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  
 
 plan:
   module:
